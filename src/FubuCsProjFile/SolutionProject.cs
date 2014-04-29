@@ -25,6 +25,7 @@ namespace FubuCsProjFile
         private readonly IList<string> _directives = new List<string>();
         private readonly IList<ProjectSection> _projectSections = new List<ProjectSection>(); 
         private readonly Lazy<CsProjFile> _project;
+        private string _solutionPath;
 
         public SolutionProject(CsProjFile csProjFile, string solutionDirectory)
         {
@@ -70,6 +71,38 @@ namespace FubuCsProjFile
             {
                 this.InitializeTfsSourceControlSettings(projFile, solution, tfsSourceControl);
             }
+        }
+
+        private void InitSolutionPath()
+        {
+            if (Solution == null)
+            {
+                _solutionPath = "";
+                return;
+            }
+            var nested = Solution.Sections.FirstOrDefault(s => s.SectionName == "NestedProjects");
+            if (nested == null)
+            {
+                _solutionPath = "";
+                return;
+            }
+            var childToParent = Solution.NestedProjects;
+            var solutionProject = Solution.Projects.FirstOrDefault(p => p.ProjectGuid == _projectGuid);
+            if (solutionProject != null)
+                _solutionPath = CalcSolutionPath(Solution, _projectGuid, childToParent, solutionProject.ProjectName);
+            else
+                _solutionPath = ProjectName;
+        }
+
+        private static string CalcSolutionPath(Solution solution, Guid projGuid, Dictionary<Guid, Guid> childToParent, string path)
+        {
+            if (!childToParent.ContainsKey(projGuid))
+                return path;
+            var parentGuid = childToParent[projGuid];
+            var parent = solution.Projects.FirstOrDefault(p => p.ProjectGuid == parentGuid);
+            if (parent == null)
+                return path;
+            return CalcSolutionPath(solution, parent.ProjectGuid, childToParent, parent.ProjectName + "\\" + path);
         }
 
         private void InitializeTfsSourceControlSettings(CsProjFile projFile, Solution solution, GlobalSection tfsSourceControl)
@@ -123,6 +156,19 @@ namespace FubuCsProjFile
         public CsProjFile Project
         {
             get { return _project.Value; }
+        }
+
+        /// <summary>
+        /// Path to project inside solution project tree, not related to file system path
+        /// </summary>
+        public string SolutionPath
+        {
+            get
+            {
+                if (_solutionPath == null)
+                    InitSolutionPath();
+                return _solutionPath;
+            }
         }
 
         public Solution Solution { get; set; }

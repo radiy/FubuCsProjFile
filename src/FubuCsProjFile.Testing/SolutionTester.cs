@@ -190,5 +190,15 @@ namespace FubuCsProjFile.Testing
             solution = Solution.LoadFrom("FubuMVC.SlickGrid.Temp.sln");
             solution.Projects.Count().ShouldEqual(originalProjectcount - 1);
         }
+
+        [Test]
+        public void calculate_solution_path()
+        {
+            var solution = Solution.LoadFrom(@"NestedSolution.sln");
+            var project = solution.Projects.First(p => p.ProjectName == "app");
+            project.SolutionPath.ShouldEqual("client\\app");
+            project = solution.Projects.First(p => p.ProjectName == "service");
+            project.SolutionPath.ShouldEqual("service");
+        }
     }
 }

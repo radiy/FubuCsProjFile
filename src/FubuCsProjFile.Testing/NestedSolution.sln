@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{F1ABE560-BCB9-4E0D-BDC0-5D401B1B1122}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "app", "client\app\app.csproj", "{5878740B-360A-4942-8902-926907209616}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "service", "service\app\app.csproj", "{B38A237B-0BF4-4FD0-941D-E3640A3058EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B38A237B-0BF4-4FD0-941D-E3640A3058EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B38A237B-0BF4-4FD0-941D-E3640A3058EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B38A237B-0BF4-4FD0-941D-E3640A3058EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B38A237B-0BF4-4FD0-941D-E3640A3058EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5878740B-360A-4942-8902-926907209616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5878740B-360A-4942-8902-926907209616}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5878740B-360A-4942-8902-926907209616}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5878740B-360A-4942-8902-926907209616}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5878740B-360A-4942-8902-926907209616} = {F1ABE560-BCB9-4E0D-BDC0-5D401B1B1122}
+	EndGlobalSection
+EndGlobal

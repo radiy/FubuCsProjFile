@@ -80,6 +80,7 @@ namespace FubuCsProjFile
 
         private readonly IList<string> _globals = new List<string>(); 
         private readonly IList<GlobalSection> _sections = new List<GlobalSection>();
+        private Dictionary<Guid, Guid> _nestedProjects;
 
         /// <summary>
         /// Specify the VS.Net version.  At this time, the valid options are
@@ -108,6 +109,44 @@ namespace FubuCsProjFile
             return section == null
                        ? Enumerable.Empty<BuildConfiguration>()
                        : section.Properties.Select(x => new BuildConfiguration(x));
+        }
+
+        public Dictionary<Guid, Guid> NestedProjects
+        {
+            get
+            {
+                if (_nestedProjects == null)
+                    InitProjectNesting();
+
+                return _nestedProjects;
+            }
+        }
+
+        private void InitProjectNesting()
+        {
+            var nested = Sections.FirstOrDefault(s => s.SectionName == "NestedProjects");
+            if (nested == null)
+            {
+                _nestedProjects = new Dictionary<Guid, Guid>();
+                return;
+            }
+            _nestedProjects = nested.Properties
+                .Where(p => p != null)
+                .Select(p => p.Split(new[] { " = " }, StringSplitOptions.RemoveEmptyEntries))
+                .Where(p => p.Length == 2)
+                .Select(p =>
+                {
+                    Guid childGuid;
+                    if (!Guid.TryParse(p[0], out childGuid))
+                        return null;
+                    Guid parentGuild;
+                    if (!Guid.TryParse(p[1], out parentGuild))
+                        return null;
+                    return Tuple.Create(childGuid, parentGuild);
+                })
+                .Where(t => t != null)
+                .GroupBy(t => t.Item1)
+                .ToDictionary(t => t.Key, t => t.Select(x => x.Item2).First());
         }
 
         public class SolutionReader
